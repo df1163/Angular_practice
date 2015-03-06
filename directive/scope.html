@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script>
+        angular.module('myApp',[]).controller('MyController',function($scope){
+            $scope.message = 'Hello World!';
+        }).controller('controllerA',function($scope){
+            $scope.message = 'CONTROLLER A';
+        }).directive('directiveA',function(){
+            return{
+                scope:false,
+                link:function(scope,element,attrs,controller){
+                    console.log('---------------DIRECTIVEA---------------');
+                    console.log(scope);
+                    console.log(element);
+                    console.log(attrs);
+                    console.log(controller);
+                    console.log('------------DIRECTIVEA ends-------------');
+                }
+            }
+        }).controller('controllerB',function($scope){
+            $scope.message = 'CONTROLLER B: ng-scope attribute is applied to element';
+        }).directive('directiveB',function(){
+            return{
+                scope:true,
+                link:function(scope,element,attrs,controller){
+                    console.log('---------------DIRECTIVEB---------------');
+                    console.log(scope);
+                    console.log(element);
+                    console.log(attrs);
+                    console.log(controller);
+                    console.log('------------DIRECTIVEB ends-------------');
+                }
+            }
+        }).controller('test',function($scope){
+            $scope.content = ' how are you';
+            $scope.execute = function(){
+                return 'execute';
+            };
+        }).directive('sayHello',function(){
+            return {
+                template : '<div>1: Hello, <span ng-transclude></span>,{{cont}}! -- <span ng-transclude></span>!</div>',
+                transclude : true,
+                scope : {
+                    cont : '@speak'
+                }
+            };
+        }).directive('sayHello2',function(){
+            return {
+                template : '<div>2: Hello, <span ng-transclude></span>,{{cont}}! -- <span ng-transclude></span>!</div>',
+                transclude : true,
+                scope : {
+                    cont : '='
+                }
+            };
+        }).directive('sayHello3',function(){
+            return {
+                template : '<div>3: Hello, <span ng-transclude></span>,{{cont}}! -- <span ng-transclude></span>!</div>',
+                transclude : true,
+                scope : {
+                    cont : '=sayHello3'
+                }
+            };
+        }).directive('sayHello4',function(){
+            return{
+                template:'<div>4: <span ng-transclude=""></span>: {{cont}}</div>',
+                transclude:true,
+                scope:{
+                    cont:'@sayHello4'
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div ng-controller="test">
+        <say-hello speak="{{content}} today">Honey</say-hello>
+        <hr>
+        <span say-hello2 cont="content">Honey</span>
+        <hr>
+        <span say-hello3="content">Honey</span>
+        <hr>
+        <span say-hello4="{{1 + 2}}">Executed</span>
+    </div>
+
+    <div ng-controller="MyController">
+        {{message}}
+
+    </div>
+    <div ng-controller="controllerA">
+        {{message}}
+        <div directive-a=""></div>
+    </div>
+    <div ng-controller="controllerB">
+        {{message}}
+        <div directive-b=""></div>
+    </div>
+</body>
+</html>

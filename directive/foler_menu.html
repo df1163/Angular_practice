@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script>
+        angular.module('myApp',[]).controller('MyController',function($scope){
+            $scope.message = 'Hello World!';
+        }).controller('testC',function($scope){
+            $scope.title = 'Self Introduction';
+            $scope.text = 'Hi, My name is Alex. I am currently working as a UI developer and now am researching on AngularJs.';
+        }).directive('expander',function(){
+            return {
+                restrict : 'E',
+                templateUrl : 'expanderTemp.html',
+                replace : true,
+                transclude : true,
+                scope : {
+                    mytitle : '=etitle'
+                },
+                link : function(scope,element,attris){
+                    scope.showText = false;
+                    scope.toggleText = function(){
+                        scope.showText = ! scope.showText;
+                    }
+                }
+            };
+        });
+    </script>
+</head>
+<body>
+    <script type="text/ng-template" id="expanderTemp.html">
+        <div  class="mybox">
+            <div class="mytitle" ng-click="toggleText()">
+                {­{title}­}
+            </div>
+            <div ng-transclude ng-show="showText">
+            </div>
+        </div>
+    </script>
+
+    <div ng-controller="testC">
+        <expander etitle="title">{{text}}</expander>
+    </div>
+</body>
+</html>
