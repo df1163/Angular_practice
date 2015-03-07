@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script>
+        angular.module('myApp',[]).controller('MainCtrl', function($scope) {
+            $scope.name = "Angular";
+
+            $scope.updated = 0;
+
+            $scope.$watch('name', function(newValue, oldValue) {
+                if (newValue === oldValue) { return; } // AKA first run
+                $scope.updated++;
+            });
+        }).controller('MainCtrl2', function($scope) {
+            $scope.user = { name: "Fox" };
+
+            $scope.updated = 0;
+
+            $scope.$watch('user', function(newValue, oldValue) {
+                if (newValue === oldValue) { return; }
+                $scope.updated++;
+            });
+        }).controller('MainCtrl3', function($scope) {
+            $scope.user = { name: "Fox" };
+
+            $scope.updated = 0;
+
+            $scope.$watch('user', function(newValue, oldValue) {
+                if (newValue === oldValue) { return; }
+                $scope.updated++;
+            },true);
+        });;
+    </script>
+</head>
+<body>
+    <h3>
+        Skipping the first running of $watch by modifying $watch function
+    </h3>
+    <div ng-controller="MainCtrl">
+        <input ng-model="name" />
+        Name updated: {{updated}} times.
+    </div>
+    <h3>
+        $watch only watch on object reference
+    </h3>
+    <div ng-controller="MainCtrl2">
+        <input ng-model="user.name" />
+        Name updated: {{updated}} times.
+    </div>
+    <h3>
+        To make watch on exact the same object add third argument for watch function
+    </h3>
+    <div ng-controller="MainCtrl3">
+        <input ng-model="user.name" />
+        Name updated: {{updated}} times.
+    </div>
+</body>
+</html>

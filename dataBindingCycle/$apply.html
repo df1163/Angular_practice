@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script>
+        angular.module('myApp',[]).controller('MainCtrl', function($scope) {
+            $scope.hello = "Hello";
+
+            $scope.setHello = function() {
+                $scope.hello = "World";
+            }
+
+            $scope.foo = 0;
+            $scope.bar = 0;
+        }).directive('clickable', function() {
+
+            return {
+                restrict: "E",
+                scope: {
+                    foo: '=',
+                    bar: '='
+                },
+                template: '<ul style="background-color: lightblue"><li>foo:{{foo}}</li><li>bar:{{bar}}</li></ul>',
+                link: function(scope, element, attrs) {
+                    element.bind('click', function() {
+                        scope.foo++;
+                        scope.bar++;
+                        //change value in scope of directive but will not show on UI
+                        //scope.$apply();
+                        console.log(scope.foo + '  ' + scope.bar);
+                    });
+                }
+            }
+
+        });;
+    </script>
+</head>
+<body ng-controller="MainCtrl">
+    <h2>
+        Two ways to make the click number of directive change to actual click number:
+        <br>
+        <small>
+            1. add scope.$apply to scope
+            2. click button to trigger $watch on button, which will lead to a $digest cycle run, then update view between
+            controller and template
+        </small>
+    </h2>
+    <hr>
+    <h4>
+        If click button then actual clicked foo and bar number will display in clickable div.
+    </h4>
+    <br>
+    {{ hello }}
+    <button ng-click="setHello()">Change the name</button>
+    <hr>
+    <h4>
+        Clickable div: number will be stored in scope of directive and controller both
+    </h4>
+    <br>
+    <clickable foo="foo" bar="bar"></clickable>
+    <hr>
+
+</body>
+</html>
